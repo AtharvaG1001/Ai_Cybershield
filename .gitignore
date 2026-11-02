@@ -1,0 +1,1 @@
+<pre><code>venv/ backend/venv/ __pycache__/ *.py[cod] .pytest_cache/ node_modules/ .next/ out/ dist/ build/ .env .env.* !.env.example !.env.sample *.db *.sqlite *.sqlite3 .DS_Store Thumbs.db .idea/ .vscode/</code></pre>"datasets/phishing_emails.csv" 

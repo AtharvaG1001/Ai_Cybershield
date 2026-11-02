@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Shield — Phishing & Email Threat Detection</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css">
+<base target="_blank">
+</head>
+
+<body>
+<!-- Sidebar Toggle Button -->
+<button class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()" title="Toggle Sidebar (Esc)">
+    <i class="fa-solid fa-chevron-left"></i>
+</button>
+<!-- ====================== SIDEBAR ====================== -->
+ 
+<div class="sidebar">
+
+    <div class="logo">
+        <i class="fa-solid fa-shield-halved"></i>
+        <h2>AI <span>Shield</span></h2>
+    </div>
+
+    <!-- Security Status Indicator -->
+    <div class="security-status">
+        <div class="status-dot"></div>
+        <span>System Secure</span>
+    </div>
+
+    <ul class="menu">
+
+        <li class="menu-item active" onclick="showPage('dashboard',this)">
+            <i class="fa-solid fa-house"></i>
+            <span>Dashboard</span>
+        </li>
+
+        <li class="menu-item" onclick="showPage('email',this)">
+            <i class="fa-solid fa-envelope-open-text"></i>
+            <span>Email Scanner</span>
+        </li>
+
+        <li class="menu-item" onclick="showPage('history',this)">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+            <span>Scan History</span>
+        </li>
+
+        <li class="menu-item" onclick="showPage('reports',this)">
+            <i class="fa-solid fa-file-shield"></i>
+            <span>Threat Reports</span>
+        </li>
+
+        <li class="menu-item" onclick="showPage('settings',this)">
+            <i class="fa-solid fa-gear"></i>
+            <span>Settings</span>
+        </li>
+
+    </ul>
+
+</div>
+
+<!-- ====================== MAIN CONTENT ====================== -->
+<div class="main-content">
+
+    <!-- ================= DASHBOARD PAGE ================= -->
+    <div id="dashboardPage">
+        <div class="container">
+
+            <h1><i class="fa-solid fa-shield-virus"></i> Threat Detection Console</h1>
+            <p class="subtitle">
+                AI-powered phishing, malware & email threat analysis engine
+            </p>
+
+            <!-- URL Scan Card -->
+            <div class="card">
+                <input
+                    type="text"
+                    id="urlInput"
+                    placeholder="Enter URL, email, or paste suspicious content..."
+                    autocomplete="off">
+                <button class="btn-scan" onclick="analyzeURL()">
+                    <i class="fa-solid fa-radar"></i> Scan Now
+                </button>
+            </div>
+
+            <!-- Loading / Scanning State -->
+            <div id="loading" class="loading">
+                <div class="spinner"></div>
+                <p class="loading-text">Initializing threat analysis</p>
+            </div>
+
+            <!-- Results Section -->
+            <section id="result" class="result-section">
+                <!-- Dynamic results injected here by JS -->
+            </section>
+
+        </div>
+    </div>
+
+    <!-- ================= EMAIL SCANNER PAGE ================= -->
+    <div id="emailPage" style="display:none;">
+        <div class="container email-scanner-container">
+
+            <!-- Page Header -->
+            <div class="email-page-header">
+                <div>
+                    <h1>
+                        <i class="fa-solid fa-envelope-open-text"></i>
+                        Email Threat Scanner
+                    </h1>
+
+                    <p class="subtitle">
+                        Analyze suspicious emails using AI-powered phishing,
+                        spam, sender and link detection
+                    </p>
+                </div>
+            </div>
+
+            <!-- Email Input Card -->
+            <div class="card email-input-card">
+
+                <div class="email-card-header">
+                    <div class="email-card-title">
+                        <i class="fa-solid fa-file-lines"></i>
+                        <div>
+                            <h3>Email Details</h3>
+                            <p>Enter sender, subject and email content</p>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- From + Subject -->
+                <div class="email-top-fields">
+
+                    <div class="email-field">
+                        <label for="emailFrom">
+                            <i class="fa-solid fa-user"></i>
+                            From
+                        </label>
+
+                        <input
+                            type="email"
+                            id="emailFrom"
+                            class="email-input"
+                            placeholder="sender@example.com"
+                        >
+                    </div>
+
+
+                    <div class="email-field">
+                        <label for="emailSubject">
+                            <i class="fa-solid fa-heading"></i>
+                            Subject
+                        </label>
+
+                        <input
+                            type="text"
+                            id="emailSubject"
+                            class="email-input"
+                            placeholder="Enter email subject"
+                        >
+                    </div>
+
+                </div>
+
+
+                <!-- Email Body -->
+                <div class="email-field email-body-field">
+
+                    <label for="emailInput">
+                        <i class="fa-solid fa-envelope"></i>
+                        Email Body
+                    </label>
+
+                    <textarea
+                        id="emailInput"
+                        class="email-textarea"
+                        placeholder="Paste the email content here...
+
+Example:
+
+Your account has unusual activity.
+Please login and verify your account.
+
+https://example.com/login"
+                        spellcheck="false"
+                    ></textarea>
+
+                </div>
+
+
+                <!-- Actions -->
+                <div class="email-actions">
+
+                    <button
+                        class="btn-scan"
+                        onclick="analyzeEmail()"
+                    >
+                        <i class="fa-solid fa-shield-virus"></i>
+                        Analyze Email
+                    </button>
+
+                    <button
+                        class="btn-secondary"
+                        onclick="clearEmailScanner()"
+                    >
+                        <i class="fa-solid fa-eraser"></i>
+                        Clear
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================= SCREENSHOT OCR ================= -->
+            <div class="email-ocr-section">
+
+                <div class="email-ocr-header">
+                    <div class="email-ocr-title">
+                        <i class="fa-solid fa-camera"></i>
+
+                        <div>
+                            <h3>Scan Email Screenshot</h3>
+                            <p>
+                                Upload a screenshot of a suspicious email
+                                and extract its text automatically.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="email-ocr-upload">
+
+                    <input
+                        type="file"
+                        id="emailScreenshot"
+                        accept="image/png,image/jpeg,image/jpg,image/webp"
+                        hidden
+                    >
+
+                    <label
+                        for="emailScreenshot"
+                        class="ocr-upload-button"
+                    >
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                        <span>Upload Screenshot</span>
+                    </label>
+
+                    <p class="ocr-supported">
+                        PNG, JPG or WEBP
+                    </p>
+
+                </div>
+
+                <!-- OCR Progress -->
+                <div id="ocrProgress" class="ocr-progress" style="display:none;">
+                    <div class="spinner"></div>
+                    <p class="loading-text" id="ocrProgressText">
+                        Preparing OCR engine...
+                    </p>
+                </div>
+
+                <!-- OCR Preview + Result -->
+                <div id="ocrPreviewWrap" class="ocr-preview-wrap" style="display:none;">
+                    <div class="ocr-preview">
+                        <img id="ocrPreviewImage" alt="Uploaded email screenshot">
+                    </div>
+
+                    <div class="ocr-result">
+                        <label for="ocrExtractedText">
+                            <i class="fa-solid fa-text-slash"></i>
+                            Extracted Text
+                        </label>
+
+                        <textarea
+                            id="ocrExtractedText"
+                            class="email-textarea ocr-textarea"
+                            placeholder="Extracted text will appear here..."
+                            spellcheck="false"
+                        ></textarea>
+
+                        <div class="ocr-actions">
+                            <button
+                                class="btn-scan"
+                                type="button"
+                                onclick="applyOcrTextToEmail()"
+                            >
+                                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                                Use This Text
+                            </button>
+
+                            <button
+                                class="btn-secondary"
+                                type="button"
+                                onclick="clearOcrSection()"
+                            >
+                                <i class="fa-solid fa-xmark"></i>
+                                Discard
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- ================ /SCREENSHOT OCR ================ -->
+
+
+            <!-- Loading -->
+            <div id="emailLoading" class="loading">
+
+                <div class="spinner"></div>
+
+                <p class="loading-text">
+                    Analyzing email threat indicators...
+                </p>
+
+            </div>
+
+
+            <!-- Results -->
+            <section
+                id="emailResult"
+                class="result-section"
+            ></section>
+
+        </div>
+    </div>
+
+    <!-- ================= HISTORY PAGE ================= -->
+    <div id="historyPage" style="display:none;">
+        <div class="container">
+
+            <h1><i class="fa-solid fa-clock-rotate-left"></i> Scan History</h1>
+            <p class="subtitle">Review past threat scans and detection results</p>
+
+            <button id="clearHistory" class="btn-danger" onclick="clearHistory()">
+                <i class="fa-solid fa-trash-can"></i> Clear History
+            </button>
+
+            <div id="historySection" class="history-section">
+                <h2 class="section-title">Recent Scans</h2>
+                <div id="historyList" class="history-list">
+                    <p class="empty-history">
+                        <i class="fa-regular fa-folder-open"></i> No scans recorded yet.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ================= REPORTS PAGE ================= -->
+    <div id="reportsPage" style="display:none;">
+        <div class="container">
+
+            <h1><i class="fa-solid fa-file-shield"></i> Threat Reports</h1>
+            <p class="subtitle">Generate and export detailed security analysis reports</p>
+
+            <div class="dashboard-grid">
+                <!-- Report Card 1 -->
+                <div class="dashboard-card">
+                    <h3><i class="fa-solid fa-file-pdf"></i> PDF Report</h3>
+                    <p class="text-muted mb-2">Download a comprehensive PDF threat analysis report.</p>
+                    <button onclick="downloadReport('pdf')" class="mt-3">
+                        <i class="fa-solid fa-download"></i> Download PDF
+                    </button>
+                </div>
+
+                <!-- Report Card 2 -->
+                <div class="dashboard-card">
+                    <h3><i class="fa-solid fa-file-csv"></i> CSV Export</h3>
+                    <p class="text-muted mb-2">Export scan history data in CSV format for further analysis.</p>
+                    <button onclick="downloadReport('csv')" class="mt-3">
+                        <i class="fa-solid fa-download"></i> Export CSV
+                    </button>
+                </div>
+
+                <!-- Report Card 3 -->
+                <div class="dashboard-card">
+                    <h3><i class="fa-solid fa-chart-column"></i> Analytics</h3>
+                    <p class="text-muted mb-2">View threat trends, detection accuracy, and statistics.</p>
+                    <button onclick="showAnalytics()" class="mt-3">
+                        <i class="fa-solid fa-arrow-right"></i> View Analytics
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ================= SETTINGS PAGE ================= -->
+    <div id="settingsPage" style="display:none;">
+        <div class="container">
+
+            <h1><i class="fa-solid fa-gear"></i> System Settings</h1>
+            <p class="subtitle">Configure detection parameters and appearance</p>
+
+            <div class="dashboard-grid">
+                <!-- Appearance Card -->
+                <div class="dashboard-card">
+                    <h3><i class="fa-solid fa-palette"></i> Appearance</h3>
+                    <div class="theme-switch">
+                        <span><i class="fa-solid fa-moon"></i> Dark Mode</span>
+                        <label class="switch">
+                            <input type="checkbox" id="themeToggle" onchange="toggleTheme()" >
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Detection Sensitivity Card -->
+                <div class="dashboard-card">
+                    <h3><i class="fa-solid fa-sliders"></i> Detection Sensitivity</h3>
+                    <div class="info-row">
+                        <span class="label">Sensitivity Level</span>
+                        <span class="value">High</span>
+                    </div>
+                    <div class="progress">
+                        <div class="progress-fill" style="width: 85%"></div>
+                    </div>
+                    <p class="text-muted mt-1" style="font-size: 13px;">
+                        Higher sensitivity catches more threats but may increase false positives.
+                    </p>
+                </div>
+
+                <!-- API Status Card -->
+                <div class="dashboard-card">
+                    <h3><i class="fa-solid fa-server"></i> Engine Status</h3>
+                    <div class="info-row">
+                        <span class="label">ML Model</span>
+                        <span class="value text-safe"><i class="fa-solid fa-circle-check"></i> Online</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Database</span>
+                        <span class="value text-safe"><i class="fa-solid fa-circle-check"></i> Connected</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Last Updated</span>
+                        <span class="value font-mono">Just now</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<!-- ================= SCRIPTS ================= -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<script src="script.js"></script>
+<script src="navigation.js"></script>
+<script src="theme.js"></script>
+<script src="reports.js"></script>
+
+</body>
+</html>
