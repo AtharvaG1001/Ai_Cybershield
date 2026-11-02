@@ -52,7 +52,9 @@ def train():
     df = pd.read_csv(DATASET_PATH)
     print(f"[+] Dataset shape: {df.shape}")
 
-    X = df.drop("label", axis=1)
+    # "https" is a dataset artifact (legit URLs in PhiUSIIL are ~all https),
+    # so the model must not rely on it.
+    X = df.drop(columns=["label", "https"], errors="ignore")
     y = df["label"]
     feature_names = list(X.columns)
 
@@ -201,8 +203,8 @@ def train():
 if __name__ == "__main__":
     success = train()
     if success:
-        print("\n[✓] Training pipeline complete.")
+        print("\n[OK] Training pipeline complete.")
         print("    Restart the FastAPI server to load the new model.")
     else:
-        print("\n[✗] Training failed.")
+        print("\n[FAIL] Training failed.")
         sys.exit(1)

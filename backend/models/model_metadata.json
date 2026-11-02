@@ -1,22 +1,22 @@
 {
   "model_version": "2.0.0",
   "model_type": "HistGradientBoostingClassifier",
-  "n_features": 35,
+  "n_features": 34,
   "dataset": "PhiUSIIL_Phishing_URL_Dataset",
   "label_mapping": {
     "0": "PHISHING",
     "1": "LEGITIMATE"
   },
-  "trained_at": "2026-10-24T09:45:55.652578",
+  "trained_at": "2026-11-02T07:25:33.227078",
   "train_size": 188636,
   "test_size": 47159,
   "metrics": {
-    "accuracy": 0.9958,
-    "precision": 0.9991,
-    "recall": 0.9911,
-    "f1": 0.9951,
-    "roc_auc": 0.9983,
-    "fpr": 0.0007,
-    "fnr": 0.0089
+    "accuracy": 0.8828,
+    "precision": 0.9745,
+    "recall": 0.7459,
+    "f1": 0.845,
+    "roc_auc": 0.9018,
+    "fpr": 0.0146,
+    "fnr": 0.2541
   }
 }

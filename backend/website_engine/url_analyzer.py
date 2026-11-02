@@ -1,6 +1,27 @@
 from .feature_extractor import *
 
+def canonicalize_url(url):
+    """
+    Return a canonical form of the URL used for ML feature extraction:
+    scheme and leading "www." removed, host lowercased, so that
+    "google.com", "https://google.com" and "https://www.google.com"
+    all yield identical features. This prevents the model from keying on
+    dataset artifacts (the PhiUSIIL legitimate URLs nearly all start with
+    "https://www.").
+    """
+    url = (url or "").strip()
+    url = re.sub(r"^[a-zA-Z][a-zA-Z0-9+.-]*://", "", url)
+    m = re.match(r"^([^/?#]*)(.*)$", url, re.S)
+    host, rest = m.group(1), m.group(2)
+    host = host.lower()
+    if host.startswith("www."):
+        host = host[4:]
+    return "http://" + host + rest
+
+
 def analyze_url(url):
+    original_url = url
+    url = canonicalize_url(url)
 
     features = {
 
@@ -28,7 +49,7 @@ def analyze_url(url):
 
         # URL Properties
         "subdomains": count_subdomains(url),
-        "https": int(has_https(url)),
+        "https": int(has_https(original_url)),
         "ip_address": int(has_ip_address(url)),
 
         # Advanced Features

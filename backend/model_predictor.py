@@ -28,6 +28,33 @@ FEATURE_NAMES_PATH = os.path.join(MODEL_DIR, "feature_names.json")
 MODEL_META_PATH = os.path.join(MODEL_DIR, "model_metadata.json")
 
 
+# Well-known domains. The training set (PhiUSIIL) contains almost only bare
+# homepages as legitimate samples, so the lexical model over-flags legitimate
+# deep links (e.g. github.com/login). Matching is on the exact host or a true
+# subdomain, so "paypal.com.evil.tk" is NOT trusted.
+TRUSTED_DOMAINS = {
+    "google.com", "youtube.com", "gmail.com", "microsoft.com", "live.com",
+    "office.com", "outlook.com", "apple.com", "icloud.com", "amazon.com",
+    "github.com", "wikipedia.org", "facebook.com", "instagram.com",
+    "linkedin.com", "twitter.com", "x.com", "paypal.com", "netflix.com",
+    "stackoverflow.com", "mozilla.org", "cloudflare.com", "adobe.com",
+    "dropbox.com", "zoom.us", "whatsapp.com", "yahoo.com", "reddit.com",
+    "python.org", "anthropic.com", "claude.ai", "vercel.com",
+}
+
+
+def is_trusted_domain(url: str) -> bool:
+    from urllib.parse import urlparse
+    u = url.strip()
+    if "://" not in u:
+        u = "http://" + u
+    try:
+        host = (urlparse(u).hostname or "").lower()
+    except ValueError:
+        return False
+    return any(host == d or host.endswith("." + d) for d in TRUSTED_DOMAINS)
+
+
 class ModelPredictor:
 
     def __init__(self):
@@ -115,6 +142,12 @@ class ModelPredictor:
 
         # FIX: correct label mapping
         predicted_label = "PHISHING" if prediction == 0 else "LEGITIMATE"
+
+        if predicted_label == "PHISHING" and is_trusted_domain(url):
+            predicted_label = "LEGITIMATE"
+            phishing_prob = min(phishing_prob, 10.0)
+            legit_prob = round(100.0 - phishing_prob, 2)
+            confidence = legit_prob
 
         return {
             "prediction": predicted_label,

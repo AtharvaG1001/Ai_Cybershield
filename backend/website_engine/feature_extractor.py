@@ -87,7 +87,10 @@ def count_semicolon(url):
     return url.count(";")
 
 def has_port(url):
-    return int(urlparse(url).port is not None)
+    try:
+        return int(urlparse(url).port is not None)
+    except ValueError:
+        return 1
 def suspicious_tld(url):
 
     suspicious = [
